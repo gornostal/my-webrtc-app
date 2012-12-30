@@ -1,0 +1,100 @@
+.home {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.form-signin {
+    max-width: 300px;
+    padding: 19px 29px 29px;
+    margin: 0 auto 20px;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+.form-signin input[type="text"],
+.form-signin input[type="password"] {
+    font-size: 16px;
+    height: auto;
+    margin-bottom: 15px;
+    padding: 7px 9px;
+}
+
+
+
+body {
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+/* Custom container */
+.container-narrow {
+    margin: 0 auto;
+    max-width: 1000px;
+}
+.container-narrow > hr {
+    margin: 30px 0;
+}
+
+iframe {
+    width: 1000px;
+    height: 260px;
+    border: none;
+}
+
+#remote-view {
+    width: 700px;
+    height: 525px;
+    border: 1px solid #999;
+    float: left;
+    position: relative;
+}
+#local-view {
+    float: left;
+    width: 290px;
+    height: 218px;
+    border: 1px solid #999;
+    margin-left: 5px;
+    position: relative;
+}
+
+#remote-view::after,
+#local-view::after {
+    display: block;
+    content: "Remote View";
+    font-size: 36px;
+    color: rgba(153, 153, 153, 0.38);
+    font-weight: bold;
+    position: absolute;
+    top: 230px;
+    left: 220px;
+}
+#local-view::after {
+    content: "Local View";
+    top: 90px;
+    left: 50px;
+}
+#local-view video{
+    width: 290px;
+    height: 218px;
+    position: absolute;
+    z-index: 1;
+}
+#remote-view video{
+    width: 700px;
+    height: 525px;
+    position: absolute;
+    z-index: 1;
+}
+
+.hangup {
+    margin: 30px 0 0 105px;
+}
