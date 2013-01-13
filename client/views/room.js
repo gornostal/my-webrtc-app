@@ -11,7 +11,10 @@ define([
 ], function (Backbone, _, roomTpl, getUserMedia, PeerConnection, room, socket) {
 
     var stunServer = {
-        iceServers: [ {url: "stun:stun.l.google.com:19302"} ]
+        iceServers: [
+            {url: "stun:stun.l.google.com:19302"},
+            {url: "turn:agornostal%40cogniance.com@numb.viagenie.ca:3478", credential: 'webrtc'}
+        ]
     };
 
     var RoomView = Backbone.View.extend({

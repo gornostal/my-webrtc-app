@@ -1,10 +1,19 @@
 #!/usr/bin/env node
 
+/**
+ * Usage:
+ * node my-webrtc-app.js [port]
+ * 
+ * Default port is 3000
+ */
+
 /*jshint node:true */
 /*global console:false */
 
 var connect = require('connect');
 var fs = require('fs');
+
+var port = process.argv[2] || 3000;
 
 var app = connect()
     .use(connect.static(__dirname + '/../client'))
@@ -18,9 +27,9 @@ var app = connect()
             res.end(fs.readFileSync(__dirname + '/../client/404.html'));
         }
     })
-    .listen(3000);
+    .listen(port);
 
-console.log('Server is running at http://localhost:3000/');
+console.log('Server is running at http://localhost:' + port + '/');
 
 
 var io = require('socket.io').listen(app);
