@@ -35,7 +35,7 @@ console.log('Server is running at http://localhost:' + port + '/');
 var io = require('socket.io').listen(app);
 io.sockets.on('connection', function (socket) {
 
-    // Returns socket of the other guy
+    // Returns socket of the other peer
     var getRecipient = function () {
         var rooms = io.sockets.manager.roomClients[socket.id];
         for (var name in rooms){
@@ -51,7 +51,7 @@ io.sockets.on('connection', function (socket) {
         }
     };
 
-    // Sends other guy's description to us
+    // Sends other peer's description to us
     var sendDescription = function () {
         var rcpt = getRecipient();
         if( rcpt ){
@@ -90,7 +90,7 @@ io.sockets.on('connection', function (socket) {
             socket.join(data.id);
             socket.emit('join room', {message: '', isCaller: clients.length !== 0});
 
-            // send description and candidates of the other guy (if exist) to this socket
+            // send description and candidates of the other peer (if exist) to this socket
             sendDescription();
             sendCandidates();
 
@@ -137,15 +137,14 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function(){
-        var rooms = io.sockets.manager.roomClients[socket.id];
-        console.log('rooms', rooms);
+        var rcpt = getRecipient();
+        if (rcpt) {
+            // notify the other peer that he was left alone in the room
+            rcpt.emit('leave room');
 
-        // notify the other guy that he was left alone in the room
-        for (var name in rooms){
-            if (/^\//.test(name) && rooms[name]) {
-                name = name.substr(1);
-                io.sockets.in(name).emit('leave room');
-            }
+            // remove his saved candidates and description
+            rcpt.set('candidates', null);
+            rcpt.set('description', null);
         }
     });
 

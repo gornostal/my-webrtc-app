@@ -98,3 +98,15 @@ iframe {
 .hangup {
     margin: 30px 0 0 105px;
 }
+
+h3.room {
+    display: inline;
+}
+
+#user-left {
+    margin: 0;
+    font-weight: bold;
+    margin-left: 30px;
+    padding-right: 14px;
+    display: none;
+}
