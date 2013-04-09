@@ -1,14 +1,13 @@
-/*global console:false, define:false, $:false, RTCSessionDescription:false, RTCIceCandidate:false */
-
 define([
   'backbone',
+  'jquery',
   'underscore',
   'text!templates/room.html',
   'module/getUserMedia',
   'module/peerConnection',
   'module/room',
   'module/socket'
-], function (Backbone, _, roomTpl, getUserMedia, PeerConnection, room, socket) {
+], function (Backbone, $, _, roomTpl, getUserMedia, PeerConnection, room, socket) {
 
     var stunServer = {
         iceServers: [

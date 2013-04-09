@@ -19,17 +19,17 @@ require.config({
 
 require([
     'module/router',
-    'module/getUserMedia',
+    'module/adapter',
     'text!templates/not-supported.html',
     'underscore',
     'backbone'
     ],
-    function(Router, getUserMedia, notSupportedTpl, _, Backbone){
-        if (!getUserMedia) {
-            document.body.innerHTML = _.template(notSupportedTpl)();
-        } else {
+    function(Router, adapter, notSupportedTpl, _, Backbone){
+        if (adapter.RTCPeerConnection && adapter.getUserMedia) {
             new Router();
             Backbone.history.start({pushState: true});
+        } else {
+            document.body.innerHTML = _.template(notSupportedTpl)();
         }
     }
 );

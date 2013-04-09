@@ -7,9 +7,6 @@
  * Default port is 3000
  */
 
-/*jshint node:true */
-/*global console:false */
-
 var connect = require('connect');
 var fs = require('fs');
 
