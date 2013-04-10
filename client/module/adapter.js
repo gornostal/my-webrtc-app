@@ -60,11 +60,18 @@ define(function(){
         // Attach a media stream to an element.
         adapter.attachMediaStream = function(element, stream) {
             element.src = window.webkitURL.createObjectURL(stream);
+            element.autoplay = true;
         };
 
         adapter.reattachMediaStream = function(to, from) {
             to.src = from.src;
         };
+
+        // The RTCSessionDescription object.
+        adapter.RTCSessionDescription = window.RTCSessionDescription;
+
+        // The RTCIceCandidate object.
+        adapter.RTCIceCandidate = window.RTCIceCandidate;
 
         // The representation of tracks in a stream is changed in M26.
         // Unify them for earlier Chrome versions in the coexisting period.

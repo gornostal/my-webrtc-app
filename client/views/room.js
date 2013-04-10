@@ -3,11 +3,10 @@ define([
   'jquery',
   'underscore',
   'text!templates/room.html',
-  'module/getUserMedia',
-  'module/peerConnection',
+  'module/adapter',
   'module/room',
   'module/socket'
-], function (Backbone, $, _, roomTpl, getUserMedia, PeerConnection, room, socket) {
+], function (Backbone, $, _, roomTpl, adapter, room, socket) {
 
     var stunServer = {
         iceServers: [
@@ -54,7 +53,7 @@ define([
         },
 
         establishConnection: function(isCaller){
-            var pc = new PeerConnection(stunServer);
+            var pc = new adapter.RTCPeerConnection(stunServer);
 
             // send ice candidates to the other peer
             pc.onicecandidate = function (evt) {
@@ -67,15 +66,12 @@ define([
             // once remote stream arrives, show it in the remote video element
             pc.onaddstream = function (evt) {
                 var video = document.createElement("video");
-                video.autoplay = true;
-                video.src = window.URL.createObjectURL(evt.stream);
+                adapter.attachMediaStream(video, evt.stream);
                 document.getElementById('remote-view').appendChild(video);
             };
-
-            getUserMedia({video: true, audio: true}, function(localMediaStream){
+            adapter.getUserMedia({video: true, audio: true}, function(localMediaStream){
                 var video = document.createElement("video");
-                video.autoplay = true;
-                video.src = window.URL.createObjectURL(localMediaStream);
+                adapter.attachMediaStream(video, localMediaStream);
                 document.getElementById('local-view').appendChild(video);
 
                 var gotDescription = function(description){
@@ -93,7 +89,7 @@ define([
                 // we get a remote description
                 socket.on('description', function(data){
                     console.log('received description', data);
-                    pc.setRemoteDescription( new RTCSessionDescription(data.description) );
+                    pc.setRemoteDescription( new adapter.RTCSessionDescription(data.description) );
                     
                     // once we have it, we can set candidates
                     // notify server that we need candidates
@@ -102,7 +98,7 @@ define([
                     // we got candidates
                     socket.on('candidate', function(data){
                         console.log('received candidate', data);
-                        pc.addIceCandidate( new RTCIceCandidate(data.candidate) );
+                        pc.addIceCandidate( new adapter.RTCIceCandidate(data.candidate) );
                     });
                     
                     if( !isCaller ){
