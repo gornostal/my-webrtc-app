@@ -7,10 +7,18 @@
 
     <hr>
 
-    <div id="content">
+    <div id="content" class="clearfix">
         <div id="remote-view"></div>
         <div id="local-view"></div>
         <button type="button" class="btn btn-danger hangup">Hang Up</button>
+
+        <form action="" method="POST" id="chat-form">
+            <div class="chat-ctl">
+                <div id="chat-log" class="chat-log"></div>
+                <input type="text" id="chat-msg" placeholder="write something">
+                <button type="submit" class="btn btn-primary btn-small send-msg">Send</button>
+            </div>
+        </form>
     </div>
 
 

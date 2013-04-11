@@ -110,3 +110,39 @@ h3.room {
     padding-right: 14px;
     display: none;
 }
+
+#content {
+    position: relative;
+}
+
+.chat-ctl {
+    position: absolute;
+    top: 300px;
+    width: 290px;
+    right: 0;
+}
+.chat-ctl input{
+    width: 210px;
+    font-size: 11px;
+}
+.chat-ctl button{
+    margin-left: 5px;
+    margin-top: -10px;
+}
+.chat-log {
+    background: #eee;
+    border-radius: 5px;
+    height: 180px;
+    margin-bottom: 5px;
+    font-size: 11px;
+    padding: 5px;
+    overflow: auto;
+}
+.chat-log .msg{
+    color: #777;
+    line-height: 12px;
+    margin-bottom: 10px;
+}
+.chat-log .msg b {
+    color: black;
+}

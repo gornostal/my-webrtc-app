@@ -5,8 +5,9 @@ define([
   'text!templates/room.html',
   'module/adapter',
   'module/room',
+  'module/chat',
   'module/socket'
-], function (Backbone, $, _, roomTpl, adapter, room, socket) {
+], function (Backbone, $, _, roomTpl, adapter, room, chat, socket) {
 
     var stunServer = {
         iceServers: [
@@ -25,6 +26,11 @@ define([
         },
 
         render: function () {
+            if( !/^[\-\w]+$/.test(this.room) ){
+                alert('You can use letters, numbers and _ -');
+                document.location.href = '/';
+            }
+
             this.el.innerHTML = this.template({room: this.room});
             this.joinRoom(this.room);
 
@@ -38,7 +44,7 @@ define([
             room.join(roomId, function(isCaller){
                 console.log('isCaller -', isCaller);
                 try{
-                    that.establishConnection(isCaller);
+                    // that.establishConnection(isCaller);
                 } catch(e) {
                     console.error(e);
                 }
@@ -54,6 +60,8 @@ define([
                     setTimeout(function(){ $div.fadeOut(); }, 3e3);
                 });
             });
+
+            chat();
         },
 
         establishConnection: function(isCaller){
