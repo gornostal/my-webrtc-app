@@ -37,9 +37,13 @@ define([
             var that = this;
             room.join(roomId, function(isCaller){
                 console.log('isCaller -', isCaller);
-                that.establishConnection(isCaller);
+                try{
+                    that.establishConnection(isCaller);
+                } catch(e) {
+                    console.error(e);
+                }
             }, function(e){
-                console.log('Error - room.join:', e);
+                console.error('Error - room.join:', e);
             });
 
             room.onLeave(function(){
@@ -58,7 +62,7 @@ define([
             // send ice candidates to the other peer
             pc.onicecandidate = function (evt) {
                 if(evt.candidate){
-                    console.log('send candidate', evt.candidate);
+                    console.debug('send candidate', evt.candidate);
                     socket.emit('candidate', {candidate: evt.candidate});
                 }
             };
@@ -77,7 +81,7 @@ define([
                 var gotDescription = function(description){
                     // send our description to server
                     pc.setLocalDescription(description);
-                    console.log('send local description', description);
+                    console.debug('send local description', description);
                     socket.emit('description', {description: description});
                 };
                 
@@ -88,7 +92,7 @@ define([
                 
                 // we get a remote description
                 socket.on('description', function(data){
-                    console.log('received description', data);
+                    console.debug('received description', data);
                     pc.setRemoteDescription( new adapter.RTCSessionDescription(data.description) );
                     
                     // once we have it, we can set candidates
@@ -97,26 +101,26 @@ define([
                     
                     // we got candidates
                     socket.on('candidate', function(data){
-                        console.log('received candidate', data);
+                        console.debug('received candidate', data);
                         pc.addIceCandidate( new adapter.RTCIceCandidate(data.candidate) );
                     });
                     
                     if( !isCaller ){
                         // NOTE: createAnswer has to be called after callee receives a remote description
                         pc.createAnswer(gotDescription, function(e){
-                            console.log('Error - createAnswer:', e);
+                            console.error('Error - createAnswer:', e);
                         });
                     }
                 });
 
                 if (isCaller) {
                     pc.createOffer(gotDescription, function(e){
-                        console.log('Error - createOffer:', e);
+                        console.error('Error - createOffer:', e);
                     });
                 }
                 
             }, function(e){
-                console.log('Error - getUserMedia:', e);
+                console.error('Error - getUserMedia:', e);
             });
         }
     });
