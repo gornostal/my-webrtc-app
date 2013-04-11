@@ -8,7 +8,12 @@ define(['backbone', 'views/home', 'views/room'], function(Backbone, HomeView, Ro
             new HomeView().render();
         },
         room: function(room) {
-            new RoomView(room).render();
+            if( !/^[\-\w]+$/.test(room) ){
+                alert('For room ID you can only use letters, numbers and _ -');
+                document.location.href = '/';
+            } else {
+                new RoomView(room).render();
+            }
         }
     });
 

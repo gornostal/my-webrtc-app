@@ -6,10 +6,11 @@ define([
   'module/adapter',
   'module/room',
   'module/chat',
+  'module/socket',
   'module/socket'
-], function (Backbone, $, _, roomTpl, adapter, room, chat, socket) {
+], function (Backbone, $, _, roomTpl, adapter, room, chat, socket, getDataChannel) {
 
-    var stunServer = {
+    var servers = {
         iceServers: [
             {url: "stun:stun.l.google.com:19302"},
             {url: "turn:agornostal%40cogniance.com@numb.viagenie.ca:3478", credential: 'webrtc'}
@@ -26,11 +27,6 @@ define([
         },
 
         render: function () {
-            if( !/^[\-\w]+$/.test(this.room) ){
-                alert('You can use letters, numbers and _ -');
-                document.location.href = '/';
-            }
-
             this.el.innerHTML = this.template({room: this.room});
             this.joinRoom(this.room);
 
@@ -65,7 +61,19 @@ define([
         },
 
         establishConnection: function(isCaller){
-            var pc = new adapter.RTCPeerConnection(stunServer);
+            var pc = new adapter.RTCPeerConnection(servers, {optional: [{RtpDataChannels: true}]});
+
+            var dataChannel = getDataChannel(pc, {
+                onOpen: function(){
+                    console.log('is ready');
+                },
+                onClose: function(){
+                    console.log('is closed');
+                },
+                onMessage: function(msg){
+                    console.log('new message', msg);
+                }
+            });
 
             // send ice candidates to the other peer
             pc.onicecandidate = function (evt) {
