@@ -64,21 +64,14 @@ define([
 
             var chat = initChat();
             var dataChannel = initDataChannel(pc, {
-                onOpen: function(){
-                    chat.activate();
-                },
-                onClose: function(){
-                    chat.deactivate();
-                },
-                onMessage: function(msg){
-                    // new incoming message
-                    chat.onReceiveMsg(msg);
-                }
+                onOpen: chat.activate,
+                onClose: chat.deactivate(),
+                onMessage: chat.onReceiveMsg
             });
-            chat.onSendMsg = function(msg){
-                // new outgoing message
-                dataChannel.send(msg);
-            };
+            if( !dataChannel ){
+                return false;
+            }
+            chat.onSendMsg = dataChannel.send.bind(dataChannel);
 
             // send ice candidates to the other peer
             pc.onicecandidate = function (evt) {
