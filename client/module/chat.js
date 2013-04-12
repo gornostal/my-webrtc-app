@@ -20,12 +20,12 @@ define(['jquery'], function($){
         };
 
         var logChatMsg = function(isMine, msg){
-            var icon = isMine ? '>' : '<';
-            msg = $('<div/>').text(msg).html();
             if(msg){
-                $log.append($('<div class="msg">')
-                    .addClass(isMine ? 'sent' : '')
-                    .html('<b>' + icon + ' </b>' + msg));
+                var bubble = $('<div class="bubble-wrp">');
+                bubble.append($('<div class="bubble">')
+                    .addClass(isMine ? 'you' : 'me')
+                    .text(msg));
+                $log.append(bubble);
                 $log.scrollTop($log[0].scrollHeight);
             }
         };
