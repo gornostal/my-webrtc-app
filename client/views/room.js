@@ -7,8 +7,8 @@ define([
   'module/room',
   'module/chat',
   'module/socket',
-  'module/socket'
-], function (Backbone, $, _, roomTpl, adapter, room, chat, socket, getDataChannel) {
+  'module/dataChannel'
+], function (Backbone, $, _, roomTpl, adapter, room, initChat, socket, initDataChannel) {
 
     var servers = {
         iceServers: [
@@ -40,12 +40,13 @@ define([
             room.join(roomId, function(isCaller){
                 console.log('isCaller -', isCaller);
                 try{
-                    // that.establishConnection(isCaller);
+                    that.establishConnection(isCaller);
                 } catch(e) {
                     console.error(e);
                 }
             }, function(e){
-                console.error('Error - room.join:', e);
+                alert(e);
+                document.location.href = '/';
             });
 
             room.onLeave(function(){
@@ -56,24 +57,28 @@ define([
                     setTimeout(function(){ $div.fadeOut(); }, 3e3);
                 });
             });
-
-            chat();
         },
 
         establishConnection: function(isCaller){
             var pc = new adapter.RTCPeerConnection(servers, {optional: [{RtpDataChannels: true}]});
 
-            var dataChannel = getDataChannel(pc, {
+            var chat = initChat();
+            var dataChannel = initDataChannel(pc, {
                 onOpen: function(){
-                    console.log('is ready');
+                    chat.activate();
                 },
                 onClose: function(){
-                    console.log('is closed');
+                    chat.deactivate();
                 },
                 onMessage: function(msg){
-                    console.log('new message', msg);
+                    // new incoming message
+                    chat.onReceiveMsg(msg);
                 }
             });
+            chat.onSendMsg = function(msg){
+                // new outgoing message
+                dataChannel.send(msg);
+            };
 
             // send ice candidates to the other peer
             pc.onicecandidate = function (evt) {

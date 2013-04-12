@@ -143,6 +143,9 @@ h3.room {
     line-height: 12px;
     margin-bottom: 10px;
 }
+.chat-log .sent{
+    color: #000;
+}
 .chat-log .msg b {
     color: black;
 }
