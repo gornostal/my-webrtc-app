@@ -29,12 +29,12 @@ define(['underscore'], function(_){
             try{
                 peerConnection.connectDataConnection(5001, 5000);
                 dataChannel = peerConnection.createDataChannel("channel", {});
+                dataChannel.binaryType = 'blob';
             } catch(e) {
-                alert('Your browser does not support DataChannel API. Try to update the browser');
+                // alert('Your browser does not support DataChannel API. Try to update the browser');
                 console.error('Create Data channel failed with exception: ' + e.message);  
                 return false;
             }
-            dataChannel.binaryType = 'blob';
         }
 
         var ondataChannelStateChange = function(){

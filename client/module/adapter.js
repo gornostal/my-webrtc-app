@@ -14,6 +14,7 @@ define(function(){
         adapter.webrtcDetectedBrowser = "firefox";
 
         // The RTCPeerConnection object.
+        // (open about:config and set media.peerconnection.enabled to true)
         adapter.RTCPeerConnection = window.mozRTCPeerConnection;
 
         // The RTCSessionDescription object.
@@ -28,7 +29,7 @@ define(function(){
 
         // Attach a media stream to an element.
         adapter.attachMediaStream = function(element, stream) {
-            element.mozSrcObject = stream;
+            element.src = URL.createObjectURL(stream);
             element.play();
         };
 

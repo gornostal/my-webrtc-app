@@ -65,13 +65,12 @@ define([
             var chat = initChat();
             var dataChannel = initDataChannel(pc, {
                 onOpen: chat.activate,
-                onClose: chat.deactivate(),
+                onClose: chat.deactivate,
                 onMessage: chat.onReceiveMsg
             });
-            if( !dataChannel ){
-                return false;
+            if( dataChannel ){
+                chat.onSendMsg = dataChannel.send.bind(dataChannel);
             }
-            chat.onSendMsg = dataChannel.send.bind(dataChannel);
 
             // send ice candidates to the other peer
             pc.onicecandidate = function (evt) {
@@ -81,14 +80,38 @@ define([
                 }
             };
 
+            // Add an a=crypto line for SDP emitted by Firefox.
+            // This is backwards compatibility for Firefox->Chrome calls because
+            // Chrome will not accept a=crypto-less offers and Firefox only
+            // does DTLS-SRTP.
+            var ensureCryptoLine = function(sdp) {
+              
+
+              var sdpLinesIn = sdp.split('\r\n');
+              var sdpLinesOut = [];
+
+              // Search for m line.
+              for (var i = 0; i < sdpLinesIn.length; i++) {
+                sdpLinesOut.push(sdpLinesIn[i]);
+                if (sdpLinesIn[i].search('m=') !== -1) {
+                  sdpLinesOut.push("a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:BAADBAADBAADBAADBAADBAADBAADBAADBAADBAAD");
+                } 
+              }
+
+              sdp = sdpLinesOut.join('\r\n');
+              return sdp;
+            };
+
             // once remote stream arrives, show it in the remote video element
             pc.onaddstream = function (evt) {
                 var video = document.createElement("video");
+                video.controls = true;
                 adapter.attachMediaStream(video, evt.stream);
                 document.getElementById('remote-view').appendChild(video);
             };
             adapter.getUserMedia({video: true, audio: true}, function(localMediaStream){
                 var video = document.createElement("video");
+                video.controls = true;
                 adapter.attachMediaStream(video, localMediaStream);
                 document.getElementById('local-view').appendChild(video);
 
@@ -107,7 +130,16 @@ define([
                 // we get a remote description
                 socket.on('description', function(data){
                     console.debug('received description', data);
-                    pc.setRemoteDescription( new adapter.RTCSessionDescription(data.description) );
+                    pc.setRemoteDescription( new adapter.RTCSessionDescription(data.description), function(){
+                        // crateAnswer from within callback of setRemoteDescription to avoid race condition
+                        if( !isCaller ){
+                            // NOTE: createAnswer has to be called after callee receives a remote description
+                            console.debug('Create answer');
+                            pc.createAnswer(gotDescription, function(e){
+                                console.error('Error - createAnswer:', e);
+                            });
+                        }
+                    });
                     
                     // once we have it, we can set candidates
                     // notify server that we need candidates
@@ -119,16 +151,16 @@ define([
                         pc.addIceCandidate( new adapter.RTCIceCandidate(data.candidate) );
                     });
                     
-                    if( !isCaller ){
-                        // NOTE: createAnswer has to be called after callee receives a remote description
-                        pc.createAnswer(gotDescription, function(e){
-                            console.error('Error - createAnswer:', e);
-                        });
-                    }
                 });
 
                 if (isCaller) {
-                    pc.createOffer(gotDescription, function(e){
+                    console.debug('Create offer');
+                    pc.createOffer(function(offer){
+                        if (adapter.webrtcDetectedBrowser === "firefox") {
+                            offer.sdp = ensureCryptoLine(offer.sdp);
+                        }
+                        gotDescription(offer);
+                    }, function(e){
                         console.error('Error - createOffer:', e);
                     });
                 }
