@@ -85,21 +85,22 @@ define([
             // Chrome will not accept a=crypto-less offers and Firefox only
             // does DTLS-SRTP.
             var ensureCryptoLine = function(sdp) {
-              
+                console.debug('Add an a=crypto line');
 
-              var sdpLinesIn = sdp.split('\r\n');
-              var sdpLinesOut = [];
+                var sdpLinesIn = sdp.split('\r\n');
+                var sdpLinesOut = [];
 
-              // Search for m line.
-              for (var i = 0; i < sdpLinesIn.length; i++) {
-                sdpLinesOut.push(sdpLinesIn[i]);
-                if (sdpLinesIn[i].search('m=') !== -1) {
-                  sdpLinesOut.push("a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:BAADBAADBAADBAADBAADBAADBAADBAADBAADBAAD");
-                } 
-              }
+                // Search for m line.
+                for (var i = 0; i < sdpLinesIn.length; i++) {
+                    sdpLinesOut.push(sdpLinesIn[i]);
+                    if (sdpLinesIn[i].search('m=') !== -1) {
+                        sdpLinesOut.push(
+                            "a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:BAADBAADBAADBAADBAADBAADBAADBAADBAADBAAD");
+                    } 
+                }
 
-              sdp = sdpLinesOut.join('\r\n');
-              return sdp;
+                sdp = sdpLinesOut.join('\r\n');
+                return sdp;
             };
 
             // once remote stream arrives, show it in the remote video element
@@ -139,18 +140,19 @@ define([
                                 console.error('Error - createAnswer:', e);
                             });
                         }
+                    }, function(e){
+                        console.error('Error - setRemoteDescription: ' + e);
                     });
-                    
-                    // once we have it, we can set candidates
-                    // notify server that we need candidates
-                    socket.emit('need_candidates');
-                    
+
                     // we got candidates
                     socket.on('candidate', function(data){
                         console.debug('received candidate', data);
                         pc.addIceCandidate( new adapter.RTCIceCandidate(data.candidate) );
                     });
                     
+                    // once we have it, we can set candidates
+                    // notify server that we need candidates
+                    socket.emit('need_candidates');
                 });
 
                 if (isCaller) {
