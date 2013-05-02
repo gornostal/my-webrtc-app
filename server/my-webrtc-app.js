@@ -30,6 +30,7 @@ console.log('Server is running at http://localhost:' + port + '/');
 
 
 var io = require('socket.io').listen(app);
+io.set('log level', 2); // info
 io.sockets.on('connection', function (socket) {
 
     // Returns socket of the other peer
