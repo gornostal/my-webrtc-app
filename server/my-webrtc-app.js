@@ -3,7 +3,7 @@
 /**
  * Usage:
  * node my-webrtc-app.js [port]
- * 
+ *
  * Default port is 3000
  */
 
@@ -105,7 +105,7 @@ io.sockets.on('connection', function (socket) {
             candidates = candidates || [];
             candidates.push(data.candidate);
             socket.set('candidates', candidates);
-            
+
             // send it to the other peer
             var rcpt = getRecipient();
             if (rcpt) {
@@ -117,18 +117,18 @@ io.sockets.on('connection', function (socket) {
     socket.on('description', function(data){
         console.log('description', data);
         socket.set('description', data.description);
-        
+
         // send to other peer
         var rcpt = getRecipient();
         if (rcpt) {
             rcpt.emit('description', {description: data.description});
         }
     });
-    
+
     socket.on('need_description', function(){
         sendDescription();
     });
-    
+
     socket.on('need_candidates', function(){
         sendCandidates();
     });

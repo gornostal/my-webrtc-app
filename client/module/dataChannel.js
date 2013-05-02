@@ -10,7 +10,7 @@ define(['underscore'], function(_){
             onMessage: function(){}
         };
         callbacks = _.extend({}, defaultCallbacks, callbacks);
-        
+
 
         var dataChannel;
         if (navigator.webkitGetUserMedia) {
@@ -21,7 +21,7 @@ define(['underscore'], function(_){
             } catch(e) {
                 alert('Failed to create data channel. ' +
                       'You need Chrome M25 or later with --enable-data-channels flag');
-                console.error('Create Data channel failed with exception: ' + e.message);  
+                console.error('Create Data channel failed with exception: ' + e.message);
                 return false;
             }
 
@@ -32,7 +32,7 @@ define(['underscore'], function(_){
                 dataChannel.binaryType = 'blob';
             } catch(e) {
                 // alert('Your browser does not support DataChannel API. Try to update the browser');
-                console.error('Create Data channel failed with exception: ' + e.message);  
+                console.error('Create Data channel failed with exception: ' + e.message);
                 return false;
             }
         }

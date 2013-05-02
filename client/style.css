@@ -223,7 +223,7 @@ h3.room {
 }
 
 .chat-log .you {
-    float: right;    
+    float: right;
     margin: 5px 20px 5px 45px;
     background: rgb(205, 255, 205);
 }
@@ -231,5 +231,5 @@ h3.room {
 .chat-log .you::before {
     box-shadow: 2px -2px 2px 0 rgba( 178, 178, 178, .4 );
     right: -9px;
-    background: rgb(205, 255, 205); 
+    background: rgb(205, 255, 205);
 }
