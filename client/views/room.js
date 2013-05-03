@@ -4,8 +4,9 @@ define([
   'underscore',
   'text!templates/room.html',
   'module/room',
-  'module/establishConnection'
-], function (Backbone, $, _, roomTpl, room, establishConnection) {
+  'module/establishConnection',
+  'module/setStatus'
+], function (Backbone, $, _, roomTpl, room, establishConnection, setStatus) {
 
 
     var RoomView = Backbone.View.extend({
@@ -33,6 +34,7 @@ define([
                     establishConnection(isCaller);
                 } catch(e) {
                     console.error(e);
+                    setStatus('Connection error');
                 }
             }, function(e){
                 alert(e);
@@ -40,11 +42,12 @@ define([
             });
 
             room.onLeave(function(){
+                setStatus('Waiting for peer...');
                 console.log('User left the room');
                 $('#remote-view video').remove();
                 $('#user-left').fadeIn(function(){
                     var $div = $(this);
-                    setTimeout($div.fadeOut().bind($div), 3e3);
+                    setTimeout(function(){ $div.fadeOut(); }, 3e3);
                 });
             });
         }

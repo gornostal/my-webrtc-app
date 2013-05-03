@@ -2,8 +2,9 @@ define([
   'module/socket',
   'module/adapter',
   'module/chat',
-  'module/dataChannel'
-], function(socket, adapter, initChat, initDataChannel){
+  'module/dataChannel',
+  'module/setStatus'
+], function(socket, adapter, initChat, initDataChannel, setStatus){
 
     var servers = {
         iceServers: [
@@ -62,9 +63,13 @@ define([
             video.controls = true;
             adapter.attachMediaStream(video, evt.stream);
             document.getElementById('remote-view').appendChild(video);
+            setStatus('Connected');
         };
 
+        setStatus('Waiting for getUserMedia()...');
         adapter.getUserMedia({video: true, audio: true}, function(localMediaStream){
+            setStatus('Waiting for peer...');
+
             var video = document.createElement("video");
             video.controls = true;
             adapter.attachMediaStream(video, localMediaStream);
@@ -122,6 +127,7 @@ define([
 
         }, function(e){
             console.error('Error - getUserMedia:', e);
+            setStatus('getUserMedia() error');
         });
     };
 });
