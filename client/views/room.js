@@ -42,13 +42,8 @@ define([
             });
 
             room.onLeave(function(){
-                setStatus('Waiting for peer...');
-                console.log('User left the room');
-                $('#remote-view video').remove();
-                $('#user-left').fadeIn(function(){
-                    var $div = $(this);
-                    setTimeout(function(){ $div.fadeOut(); }, 3e3);
-                });
+                alert('User left the room');
+                document.location.href = '/';
             });
         }
     });

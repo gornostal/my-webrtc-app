@@ -102,15 +102,15 @@ define([
                     console.error('Error - setRemoteDescription: ' + e);
                 });
 
-                // we got candidates
-                socket.on('candidate', function(data){
-                    console.debug('received candidate', data);
-                    pc.addIceCandidate( new adapter.RTCIceCandidate(data.candidate) );
-                });
-
                 // once we have it, we can set candidates
                 // notify server that we need candidates
                 socket.emit('need_candidates');
+            });
+
+            // we got candidates
+            socket.on('candidate', function(data){
+                console.debug('received candidate', data);
+                pc.addIceCandidate( new adapter.RTCIceCandidate(data.candidate) );
             });
 
             if (isCaller) {
