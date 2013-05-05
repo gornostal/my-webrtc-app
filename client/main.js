@@ -22,9 +22,11 @@ require([
     'module/adapter',
     'text!templates/not-supported.html',
     'underscore',
-    'backbone'
+    'backbone',
+    'jquery'
     ],
-    function(Router, adapter, notSupportedTpl, _, Backbone){
+    function(Router, adapter, notSupportedTpl, _, Backbone, $){
+        $(document.body).removeClass('loading');
         if (adapter.RTCPeerConnection && adapter.getUserMedia) {
             new Router();
             Backbone.history.start({pushState: true});

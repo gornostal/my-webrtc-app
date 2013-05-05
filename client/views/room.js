@@ -11,7 +11,7 @@ define([
 
     var RoomView = Backbone.View.extend({
 
-        el: 'body',
+        el: '#page',
         template: _.template(roomTpl),
 
         initialize: function(roomId){

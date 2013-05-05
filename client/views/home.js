@@ -2,7 +2,7 @@ define(['backbone', 'jquery', 'text!templates/home.html'], function (Backbone, $
 
     var HomeView = Backbone.View.extend({
 
-        el: 'body',
+        el: '#page',
 
         render: function () {
             this.el.innerHTML = homeTpl;

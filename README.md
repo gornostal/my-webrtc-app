@@ -1,13 +1,18 @@
-# My WebRTC App
+# Simple WebRTC App
 
-Utilizes getUserMedia, PeerConnection APIs.
+Utilizes getUserMedia, PeerConnection, dataChannel APIs.
 
 # Features
 
 * Create room
 * Join room
+* Send messages via Data Channels (only in Chrome)
 
 # Requirements
 
 * Node.js on server
-* Modern browser on client
+* Chrome (v25 or higher) or Firefox (with `media.peerconnection.enabled: true`) on client
+
+# Notes
+
+* It may not work for calls between Chrome and Firefox
