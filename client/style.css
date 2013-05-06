@@ -48,10 +48,6 @@
     100% { opacity:1; }
 }
 
-.forkme img {
-    position: absolute; top: 0; right: 0; border: 0;
-}
-
 .home {
     padding-top: 40px;
     padding-bottom: 40px;
