@@ -1,6 +1,10 @@
 # Simple WebRTC App
 
-Utilizes getUserMedia, PeerConnection, dataChannel APIs.
+Utilizes getUserMedia, PeerConnection, DataChannel APIs.
+
+# Demo
+
+http://webrtc-app.gornostal.name/
 
 # Features
 
