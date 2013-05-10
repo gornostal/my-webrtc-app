@@ -276,3 +276,8 @@ h3.room {
     color: #666;
     text-align: center;
 }
+
+.gh-link {
+    text-align: center;
+    color: gray;
+}
