@@ -20,7 +20,7 @@ Utilizes getUserMedia, PeerConnection, DataChannel APIs.
 * It may not work for calls between Chrome and Firefox
 
 
-## License
+### License
 
 MIT licensed
 
