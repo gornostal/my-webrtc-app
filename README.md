@@ -18,3 +18,10 @@ Utilizes getUserMedia, PeerConnection, DataChannel APIs.
 ### Notes
 
 * It may not work for calls between Chrome and Firefox
+
+
+## License
+
+MIT licensed
+
+Copyright (C) 2013 Aleksandr Gornostal
